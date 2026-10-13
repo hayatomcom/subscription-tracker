@@ -19,3 +19,4 @@ export const subscriptions = [
     { user_id: userId, name: 'Amazonプライム', amount: 5900, billing_cycle: 'yearly', first_billing_date: '2025-09-20', category: '動画', status: 'active', memo: null },  
 ];
 
+// ユーザーが一人しかいない。一人分のサブスクリプションテーブルしかない。
