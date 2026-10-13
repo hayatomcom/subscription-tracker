@@ -14,3 +14,13 @@ export type UpcomingBilling = ActiveSubscription & {
     daysLeft: number;
 };
 
+export type SubscriptionStatus = 'active' | 'cancelled';
+
+export type SubscriptionListItem = {
+    id: string;
+    name: string;
+    amount: number;
+    billing_cycle: BillingCycle;
+    category: string;
+    status: SubscriptionStatus;
+}

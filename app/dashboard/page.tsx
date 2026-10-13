@@ -4,9 +4,8 @@ import { formatYen } from '@/app/lib/utils';
 import { todayInTokyo } from "@/app/lib/billing";
 import SummaryCard from '@/app/ui/summary-card';
 import UpcomingList from '@/app/ui/upcoming-list'
-
-// TODO: 認証を実装したら、ログイン中のユーザーIDに置き換える。
-const TEMP_USER_ID = '410544b2-4001-4271-9855-fec4b6a6442a';
+import { TEMP_USER_ID } from "@/app/lib/temp-user";
+import Link from 'next/link';
 
 export default async function DashboardPage() {
     await connection();
@@ -37,6 +36,9 @@ export default async function DashboardPage() {
                 />
             </div>
             <UpcomingList items={upcoming} />
+            <Link href="/dashboard/subscriptions" className="mt-6 inline-block text-sm text-blue-600 hover:underline">
+                サブスク一覧を見る →
+            </Link>
         </main>
     );
 }

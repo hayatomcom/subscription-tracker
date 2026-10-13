@@ -2,6 +2,7 @@
 import { sql } from '@/app/lib/db';
 import { getNextBillingDate, daysUntil } from '@/app/lib/billing';
 import { ActiveSubscription, UpcomingBilling } from "@/app/lib/definitions";
+import { SubscriptionListItem } from "@/app/lib/definitions";
 
 export async function fetchSummary(userId: string) {
     const [row] = await sql`
@@ -47,4 +48,37 @@ export async function fetchUpcomingBillings(
         .filter((s) => s.daysLeft <= withinDays)
         .sort((a,b) => a.daysLeft - b.daysLeft);
 
+}
+
+const ITEMS_PER_PAGE = 5;
+export async function fetchFilteredSubscriptions(
+    userId: string,
+    query: string,
+    currentPage: number,
+) {
+    const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+    const pattern = `%${query}%`;
+
+    return sql<SubscriptionListItem[]>`
+        SELECT id, name, amount, billing_cycle, category, status
+        FROM subscriptions
+        WHERE user_id = ${userId}
+            AND (name ILIKE ${pattern} OR category ILIKE ${pattern}) 
+        ORDER BY status ASC, name ASC, id ASC
+        LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+    `;
+}
+
+//同じ条件で何ページあるかを返す
+export async function fetchSubscriptionsPages(userId: string, query: string) {
+    const pattern = `%${query}%`;
+
+    const [row] = await sql`
+        SELECT COUNT(*) AS count
+        FROM subscriptions
+        WHERE user_id = ${userId}
+            AND (name ILIKE ${pattern} OR category ILIKE ${pattern})
+    `;
+
+    return Math.ceil(Number(row.count) / ITEMS_PER_PAGE);
 }
