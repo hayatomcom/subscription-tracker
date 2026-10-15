@@ -24,3 +24,6 @@ export type SubscriptionListItem = {
     category: string;
     status: SubscriptionStatus;
 }
+
+export const CATEGORIES = ['動画', '音楽', 'ソフトウェア', '通信', 'その他'] as const; //この配列の中身は変更されないという指定。
+export type Category = (typeof CATEGORIES)[number]; //'動画'、'音楽'..のどれか
